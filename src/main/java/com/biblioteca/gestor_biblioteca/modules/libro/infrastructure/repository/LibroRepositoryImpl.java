@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -22,7 +21,7 @@ public class LibroRepositoryImpl implements LibroRepository {
     public List<Libro> obtenerLibros() {
 
         return libroJpaRepository.findAll().stream().map(
-                libroMapper::toDomain).toList();
+                libroMapper::libroJpaEntityToLibroDomain).toList();
 
     }
 
