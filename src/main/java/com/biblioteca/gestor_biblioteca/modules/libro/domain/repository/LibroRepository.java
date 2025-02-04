@@ -9,7 +9,7 @@ public interface LibroRepository {
 
     List<Libro> obtenerLibros();
     Optional<Libro> obtenerLibroPorId(Long id);
-    Libro guardarLibro(Libro libro);
+    Libro guardarActualizarLibro(Libro libro);
     void borrarLibroPorId(Long id);
 
 }

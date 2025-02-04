@@ -7,8 +7,8 @@ import com.biblioteca.gestor_biblioteca.modules.libro.infrastructure.mapper.Libr
 import com.biblioteca.gestor_biblioteca.modules.libro.infrastructure.rest.requests.LibroRequest;
 import com.biblioteca.gestor_biblioteca.modules.libro.infrastructure.rest.responses.LibroResponse;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +55,25 @@ public class LibroController {
 
         LibroResponse libroResponse = libroMapper.libroDomainToLibroResponse(libroGuardado);
         return ResponseEntity.status(HttpStatus.CREATED).body(libroResponse);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<LibroResponse> actualizarLibro(@PathVariable Long id,
+                                                         @RequestBody LibroRequest libroRequest) {
+
+        Libro libro = libroMapper.libroRequestToLibroDomain(libroRequest);
+        LibroResponse libroActualizadoResponse = libroMapper.libroDomainToLibroResponse(
+                libroService.actualizarLibro(id, libro));
+
+        return ResponseEntity.ok(libroActualizadoResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> borrarLibro(@PathVariable Long id) {
+
+        libroService.borrarLibroPorId(id);
+        return ResponseEntity.noContent().build();
+
     }
 
 }

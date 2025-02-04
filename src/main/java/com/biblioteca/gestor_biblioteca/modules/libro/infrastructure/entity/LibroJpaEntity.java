@@ -21,15 +21,15 @@ public class LibroJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "titulo")
+    @Column(name = "titulo", nullable = false)
     private String titulo;
 
-    @Column(name = "autor")
+    @Column(name = "autor",nullable = false)
     private String autor;
 
-    @Column(name = "isbn")
+    @Column(name = "isbn",nullable = false, unique = true)
     private String isbn;
 
-    @Column(name = "fecha_publicacion")
+    @Column(name = "fecha_publicacion",nullable = false)
     private LocalDate fechaPublicacion;
 }

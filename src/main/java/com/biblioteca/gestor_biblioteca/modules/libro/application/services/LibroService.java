@@ -14,15 +14,32 @@ public class LibroService {
 
     private final LibroRepository libroRepository;
 
-    public List<Libro> obtenerLibros(){
+    public List<Libro> obtenerLibros() {
         return libroRepository.obtenerLibros();
     }
 
-    public Optional<Libro> obtenerLibroPorId(Long id){
+    public Optional<Libro> obtenerLibroPorId(Long id) {
         return libroRepository.obtenerLibroPorId(id);
     }
 
-    public Libro guardarLibro(Libro libro){
-        return libroRepository.guardarLibro(libro);
+    public Libro guardarLibro(Libro libro) {
+        return libroRepository.guardarActualizarLibro(libro);
+    }
+
+    public Libro actualizarLibro(Long id, Libro libro) {
+
+        Libro libroActualizado = libroRepository.obtenerLibroPorId(id).orElseThrow(
+                () -> new IllegalArgumentException("Libro con id " + id + " no encontrado"));
+
+        libroActualizado.setTitulo(libro.getTitulo());
+        libroActualizado.setAutor(libro.getAutor());
+        libroActualizado.setIsbn(libro.getIsbn());
+        libroActualizado.setFechaPublicacion(libro.getFechaPublicacion());
+
+        return libroRepository.guardarActualizarLibro(libroActualizado);
+    }
+
+    public void borrarLibroPorId(Long id) {
+        libroRepository.borrarLibroPorId(id);
     }
 }
