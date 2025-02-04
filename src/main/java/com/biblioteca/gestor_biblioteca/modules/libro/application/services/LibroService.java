@@ -5,7 +5,9 @@ import com.biblioteca.gestor_biblioteca.modules.libro.domain.repository.LibroRep
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -37,6 +39,26 @@ public class LibroService {
         libroActualizado.setFechaPublicacion(libro.getFechaPublicacion());
 
         return libroRepository.guardarActualizarLibro(libroActualizado);
+    }
+
+    public Libro actualizarParcialmenteLibro(Long id, Map<String, String> camposActualizados) {
+
+        Libro libroActualizado = libroRepository.obtenerLibroPorId(id).orElseThrow(
+                () -> new IllegalArgumentException("Libro con id " + id + " no encontrado"));
+
+        camposActualizados.forEach((campo, valor) -> {
+            switch (campo) {
+                case "titulo" -> libroActualizado.setTitulo(valor);
+                case "autor" -> libroActualizado.setAutor(valor);
+                case "isbn" -> libroActualizado.setIsbn(valor);
+                case "fechaPublicacion" ->
+                        libroActualizado.setFechaPublicacion(LocalDate.parse(valor));
+                default -> throw new IllegalArgumentException("Campo no válido " + campo);
+            }
+        });
+
+        return libroRepository.guardarActualizarLibro(libroActualizado);
+
     }
 
     public void borrarLibroPorId(Long id) {

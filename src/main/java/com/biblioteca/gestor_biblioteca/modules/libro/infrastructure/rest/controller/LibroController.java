@@ -7,12 +7,12 @@ import com.biblioteca.gestor_biblioteca.modules.libro.infrastructure.mapper.Libr
 import com.biblioteca.gestor_biblioteca.modules.libro.infrastructure.rest.requests.LibroRequest;
 import com.biblioteca.gestor_biblioteca.modules.libro.infrastructure.rest.responses.LibroResponse;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -39,10 +39,9 @@ public class LibroController {
 
         Optional<Libro> libro = libroService.obtenerLibroPorId(id);
 
-        return libro.map(
-                libroResponse -> ResponseEntity.ok(
-                        libroMapper.libroDomainToLibroResponse(libroResponse))).orElse(
-                ResponseEntity.notFound().build());
+        return libro.map(libroResponse -> ResponseEntity.ok(
+                        libroMapper.libroDomainToLibroResponse(libroResponse)))
+                .orElse(ResponseEntity.notFound().build());
 
     }
 
@@ -66,6 +65,16 @@ public class LibroController {
                 libroService.actualizarLibro(id, libro));
 
         return ResponseEntity.ok(libroActualizadoResponse);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<LibroResponse> actualizarParcialmenteLibro(@PathVariable Long id,
+                                                                     @RequestBody Map<String, String> camposActualizados) {
+
+        Libro libroActualizado = libroService.actualizarParcialmenteLibro(id, camposActualizados);
+        LibroResponse libroResponse = libroMapper.libroDomainToLibroResponse(libroActualizado);
+
+        return ResponseEntity.ok(libroResponse);
     }
 
     @DeleteMapping("/{id}")
