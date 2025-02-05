@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class LibroRequest {
 
-
     private Long id;
     private String titulo;
     private String autor;

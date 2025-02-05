@@ -2,6 +2,8 @@ package com.biblioteca.gestor_biblioteca.infrastructure.dataloader;
 
 import com.biblioteca.gestor_biblioteca.modules.libro.application.services.LibroService;
 import com.biblioteca.gestor_biblioteca.modules.libro.domain.model.Libro;
+import com.biblioteca.gestor_biblioteca.modules.usuario.application.services.UsuarioService;
+import com.biblioteca.gestor_biblioteca.modules.usuario.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 public class DataLoader implements CommandLineRunner {
 
     private final LibroService libroService;
+    private final UsuarioService usuarioService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -31,6 +34,18 @@ public class DataLoader implements CommandLineRunner {
             libroService.guardarLibro(
                     new Libro(null, "Moby Dick", "Herman Melville", "9781503280786",
                             LocalDate.of(1851, 11, 14)));
+        }
+        if (usuarioService.obtenerUsuarios().isEmpty()) {
+            usuarioService.guardarUsuario(new Usuario(null, "Juan Pérez", "juan.perez@example.com",
+                    "123456789", LocalDate.of(2020, 1, 15)));
+            usuarioService.guardarUsuario(new Usuario(null, "María López", "maria.lopez@example.com",
+                    "987654321", LocalDate.of(2021, 3, 22)));
+            usuarioService.guardarUsuario(new Usuario(null, "Carlos García", "carlos.garcia@example.com",
+                    "555123456", LocalDate.of(2019, 7, 9)));
+            usuarioService.guardarUsuario(new Usuario(null, "Ana Torres", "ana.torres@example.com",
+                    "444987654", LocalDate.of(2022, 5, 30)));
+            usuarioService.guardarUsuario(new Usuario(null, "Luis Fernández", "luis.fernandez@example.com",
+                    "333222111", LocalDate.of(2018, 11, 3)));
         }
     }
 }

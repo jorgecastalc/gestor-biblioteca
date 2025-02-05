@@ -70,7 +70,7 @@ public class LibroService {
 
         camposActualizados.forEach((campo, valor) -> {
 
-            if(valor == null ||valor.isBlank()){
+            if(valor == null || valor.isBlank()){
                 throw new LibroException(400,"El campo " + campo +  " no puede estar vacio");
             }
             switch (campo) {

@@ -136,8 +136,6 @@ public class LibroController {
             log.error("[Controller] Error al eliminar el libro con id {}: {}", id, e.getMessage(),e);
             return ResponseEntity.status(e.getErrorCode()).body(e.getMessage());
         }
-
-
     }
 
 }
