@@ -27,7 +27,7 @@ public class LibroJpaEntity {
     @Column(name = "autor",nullable = false)
     private String autor;
 
-    @Column(name = "isbn",nullable = false, unique = true)
+    @Column(name = "isbn",nullable = false)
     private String isbn;
 
     @Column(name = "fecha_publicacion",nullable = false)
