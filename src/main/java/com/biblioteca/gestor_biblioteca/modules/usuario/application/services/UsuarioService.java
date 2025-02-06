@@ -20,6 +20,9 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
     public List<Usuario> obtenerUsuarios(){
+
+        log.info("[Service] obteniendo lista de usuarios");
+
         return usuarioRepository.obtenerUsuarios();
     }
 

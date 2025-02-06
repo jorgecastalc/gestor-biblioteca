@@ -5,19 +5,18 @@ import com.biblioteca.gestor_biblioteca.modules.libro.domain.repository.LibroRep
 import com.biblioteca.gestor_biblioteca.modules.libro.infrastructure.rest.exceptions.LibroException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class LibroServiceTest {
 
     @Mock
@@ -30,7 +29,9 @@ class LibroServiceTest {
 
     @BeforeEach
     void setUp() {
-        libroEjemplo = new Libro(1L, "El Principito", "Antoine de Saint-Exupéry", "123456789", LocalDate.of(1943, 4, 6));
+        MockitoAnnotations.openMocks(this);
+        libroEjemplo = new Libro(1L, "El Principito", "Antoine de Saint-Exupéry", "123456789",
+                LocalDate.of(1943, 4, 6));
     }
 
     @Test
@@ -58,7 +59,8 @@ class LibroServiceTest {
     void obtenerLibroPorId_DeberiaLanzarExcepcionSiNoExiste() {
         when(libroRepository.obtenerLibroPorId(99L)).thenReturn(Optional.empty());
 
-        LibroException exception = assertThrows(LibroException.class, () -> libroService.obtenerLibroPorId(99L));
+        LibroException exception = assertThrows(LibroException.class,
+                () -> libroService.obtenerLibroPorId(99L));
         assertEquals(404, exception.getErrorCode());
     }
 
@@ -76,7 +78,8 @@ class LibroServiceTest {
     void guardarLibro_DeberiaLanzarExcepcionSiTituloEsVacio() {
         Libro libroInvalido = new Libro(2L, "", "Autor", "987654321", LocalDate.now());
 
-        LibroException exception = assertThrows(LibroException.class, () -> libroService.guardarLibro(libroInvalido));
+        LibroException exception = assertThrows(LibroException.class,
+                () -> libroService.guardarLibro(libroInvalido));
         assertEquals(400, exception.getErrorCode());
     }
 
@@ -95,9 +98,63 @@ class LibroServiceTest {
     void actualizarLibro_DeberiaLanzarExcepcionSiLibroNoExiste() {
         when(libroRepository.obtenerLibroPorId(99L)).thenReturn(Optional.empty());
 
-        LibroException exception = assertThrows(LibroException.class, () -> libroService.actualizarLibro(99L, libroEjemplo));
+        LibroException exception = assertThrows(LibroException.class,
+                () -> libroService.actualizarLibro(99L, libroEjemplo));
         assertEquals(404, exception.getErrorCode());
     }
+
+    @Test
+    void actualizarParcialmenteLibro_DeberiaActualizarCamposEspecificos() {
+        when(libroRepository.obtenerLibroPorId(1l)).thenReturn(Optional.of(libroEjemplo));
+        when(libroRepository.guardarActualizarLibro(any())).thenAnswer(
+                invocation -> invocation.getArgument(0));
+
+        Map<String, String> campoParaActualizar = Map.of("titulo", "Libro test");
+
+        Libro resultado = libroService.actualizarParcialmenteLibro(1L, campoParaActualizar);
+
+        assertEquals("Libro test", resultado.getTitulo());
+        assertEquals("Antoine de Saint-Exupéry", resultado.getAutor());
+
+    }
+
+    @Test
+    void actualizarParcialmenteLibro_DeberiaLanzarExcepcionSiLibroNoExiste(){
+        when(libroRepository.obtenerLibroPorId(99L)).thenReturn(Optional.empty());
+
+        Map<String, String> campoParaActualizar = Map.of("titulo", "Libro test");
+
+
+        LibroException exception = assertThrows(LibroException.class,
+                () -> libroService.actualizarParcialmenteLibro(99L, campoParaActualizar));
+        assertEquals(404, exception.getErrorCode());
+
+    }
+
+    @Test
+    void actualizarParcialmenteLibro_DeberiaLanzarExcepcionSiCampoVacio(){
+        when(libroRepository.obtenerLibroPorId(1L)).thenReturn(Optional.of(libroEjemplo));
+
+        Map<String, String> campoParaActualizar = Map.of("titulo", "");
+
+        LibroException exception = assertThrows(LibroException.class,
+                () -> libroService.actualizarParcialmenteLibro(1L, campoParaActualizar));
+        assertEquals(400, exception.getErrorCode());
+
+    }
+
+    @Test
+    void actualizarParcialmenteLibro_DeberiaLanzarExcepcionSiCampoNoValido(){
+        when(libroRepository.obtenerLibroPorId(1L)).thenReturn(Optional.of(libroEjemplo));
+
+        Map<String, String> campoParaActualizar = Map.of("editorial", "Editorial Planeta");
+
+        LibroException exception = assertThrows(LibroException.class,
+                () -> libroService.actualizarParcialmenteLibro(1L, campoParaActualizar));
+        assertEquals(400, exception.getErrorCode());
+
+    }
+
 
     @Test
     void borrarLibroPorId_DeberiaEliminarLibroSiExiste() {
@@ -111,7 +168,45 @@ class LibroServiceTest {
     void borrarLibroPorId_DeberiaLanzarExcepcionSiLibroNoExiste() {
         when(libroRepository.obtenerLibroPorId(99L)).thenReturn(Optional.empty());
 
-        LibroException exception = assertThrows(LibroException.class, () -> libroService.borrarLibroPorId(99L));
+        LibroException exception = assertThrows(LibroException.class,
+                () -> libroService.borrarLibroPorId(99L));
         assertEquals(404, exception.getErrorCode());
+    }
+
+    @Test
+    void validarLibroAGuardar_DeberiaNoLanzarExcepcionSiLibroEsValido() {
+        assertDoesNotThrow(() -> libroService.validarLibroAGuardar(libroEjemplo));
+    }
+
+    @Test
+    void validarLibroAGuardar_DeberiaLanzarExcepcionSiTituloEsVacio() {
+        Libro libroInvalido = new Libro(2L, "", "Autor", "987654321", LocalDate.now());
+
+        LibroException exception = assertThrows(LibroException.class, () -> libroService.validarLibroAGuardar(libroInvalido));
+        assertEquals(400, exception.getErrorCode());
+    }
+
+    @Test
+    void validarLibroAGuardar_DeberiaLanzarExcepcionSiAutorEsVacio() {
+        Libro libroInvalido = new Libro(2L, "Libro de prueba", "", "987654321", LocalDate.now());
+
+        LibroException exception = assertThrows(LibroException.class, () -> libroService.validarLibroAGuardar(libroInvalido));
+        assertEquals(400, exception.getErrorCode());
+    }
+
+    @Test
+    void validarLibroAGuardar_DeberiaLanzarExcepcionSiIsbnEsVacio() {
+        Libro libroInvalido = new Libro(2L, "Libro de prueba", "Autor", "", LocalDate.now());
+
+        LibroException exception = assertThrows(LibroException.class, () -> libroService.validarLibroAGuardar(libroInvalido));
+        assertEquals(400, exception.getErrorCode());
+    }
+
+    @Test
+    void validarLibroAGuardar_DeberiaLanzarExcepcionSiFechaPublicacionEsNula() {
+        Libro libroInvalido = new Libro(2L, "Libro de prueba", "Autor", "123456789", null);
+
+        LibroException exception = assertThrows(LibroException.class, () -> libroService.validarLibroAGuardar(libroInvalido));
+        assertEquals(400, exception.getErrorCode());
     }
 }

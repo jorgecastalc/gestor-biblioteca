@@ -20,6 +20,8 @@ public class LibroService {
 
     public List<Libro> obtenerLibros() {
 
+        log.info("[Service] obteniendo lista de libros");
+
         return libroRepository.obtenerLibros();
     }
 
@@ -77,9 +79,14 @@ public class LibroService {
                 case "titulo" -> libroActualizado.setTitulo(valor);
                 case "autor" -> libroActualizado.setAutor(valor);
                 case "isbn" -> libroActualizado.setIsbn(valor);
-                case "fechaPublicacion" ->
+                case "fechaPublicacion" ->{
+                    try {
                         libroActualizado.setFechaPublicacion(LocalDate.parse(valor));
-                default -> throw new IllegalArgumentException("Campo no válido " + campo);
+                    } catch (Exception e) {
+                        throw new LibroException(400, "Formato de fecha inválido");
+                    }
+                }
+                default -> throw new LibroException(400, "Campo no válido " + campo);
             }
         });
 
