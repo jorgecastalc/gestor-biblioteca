@@ -3,6 +3,8 @@ package com.biblioteca.gestor_biblioteca.modules.libro.application.services;
 import com.biblioteca.gestor_biblioteca.modules.libro.domain.model.Libro;
 import com.biblioteca.gestor_biblioteca.modules.libro.domain.repository.LibroRepository;
 import com.biblioteca.gestor_biblioteca.modules.libro.infrastructure.rest.exceptions.LibroException;
+import com.biblioteca.gestor_biblioteca.modules.prestamo.domain.model.Prestamo;
+import com.biblioteca.gestor_biblioteca.modules.prestamo.domain.repository.PrestamoRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.Map;
 public class LibroService {
 
     private final LibroRepository libroRepository;
+    private final PrestamoRepository prestamoRepository;
 
     public List<Libro> obtenerLibros() {
 
@@ -95,6 +98,19 @@ public class LibroService {
     }
 
     public void borrarLibroPorId(Long id) {
+
+        List<Prestamo> prestamos = prestamoRepository.obtenerPrestamosPorLibroId(id);
+
+        boolean tienePrestamosActivos = prestamos.stream()
+                .anyMatch(prestamo -> prestamo.getFechaDevolucion().isAfter(LocalDate.now()));
+
+        if (tienePrestamosActivos) {
+            throw new LibroException(400, "No se puede eliminar el libro, tiene préstamos activos.");
+        }
+        prestamos.forEach(prestamo -> {
+            prestamo.setLibro(null);
+            prestamoRepository.guardarActualizarPrestamo(prestamo);
+        });
 
         log.info("[Service] eliminando el libro con id {}", id);
         if (libroRepository.obtenerLibroPorId(id).isPresent()) {

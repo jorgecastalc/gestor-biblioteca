@@ -1,6 +1,8 @@
 package com.biblioteca.gestor_biblioteca.modules.usuario.application.services;
 
 
+import com.biblioteca.gestor_biblioteca.modules.prestamo.domain.model.Prestamo;
+import com.biblioteca.gestor_biblioteca.modules.prestamo.domain.repository.PrestamoRepository;
 import com.biblioteca.gestor_biblioteca.modules.usuario.domain.model.Usuario;
 import com.biblioteca.gestor_biblioteca.modules.usuario.domain.repository.UsuarioRepository;
 import com.biblioteca.gestor_biblioteca.modules.usuario.infrastructure.rest.exceptions.UsuarioException;
@@ -18,6 +20,7 @@ import java.util.Map;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PrestamoRepository prestamoRepository;
 
     public List<Usuario> obtenerUsuarios(){
 
@@ -80,7 +83,7 @@ public class UsuarioService {
                 case "telefono" -> usuarioActualizado.setTelefono(valor);
                 case "fechaRegistro" ->
                         usuarioActualizado.setFechaRegistro(LocalDate.parse(valor));
-                default -> throw new IllegalArgumentException("Campo no válido " + campo);
+                default -> throw new UsuarioException(400,"Campo no válido " + campo);
             }
         });
 
@@ -89,6 +92,19 @@ public class UsuarioService {
     }
 
     public void borrarUsuarioPorId(Long id) {
+
+        List<Prestamo> prestamos = prestamoRepository.obtenerPrestamosPorUsuarioId(id);
+
+        boolean tienePrestamosActivos = prestamos.stream()
+                .anyMatch(prestamo -> prestamo.getFechaDevolucion().isAfter(LocalDate.now()));
+
+        if (tienePrestamosActivos) {
+            throw new UsuarioException(400, "No se puede eliminar el usuario, tiene préstamos activos.");
+        }
+        prestamos.forEach(prestamo -> {
+            prestamo.setUsuario(null);
+            prestamoRepository.guardarActualizarPrestamo(prestamo);
+        });
 
         log.info("[Service] eliminando el usuario con id {}", id);
         if (usuarioRepository.obtenerUsuarioPorId(id).isPresent()) {

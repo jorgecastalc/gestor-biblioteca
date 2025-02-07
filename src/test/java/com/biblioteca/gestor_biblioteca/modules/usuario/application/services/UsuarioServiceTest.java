@@ -1,7 +1,6 @@
 package com.biblioteca.gestor_biblioteca.modules.usuario.application.services;
 
-import com.biblioteca.gestor_biblioteca.modules.usuario.domain.model.Usuario;
-import com.biblioteca.gestor_biblioteca.modules.usuario.infrastructure.rest.exceptions.UsuarioException;
+import com.biblioteca.gestor_biblioteca.modules.prestamo.domain.repository.PrestamoRepository;
 import com.biblioteca.gestor_biblioteca.modules.usuario.domain.model.Usuario;
 import com.biblioteca.gestor_biblioteca.modules.usuario.domain.repository.UsuarioRepository;
 import com.biblioteca.gestor_biblioteca.modules.usuario.infrastructure.rest.exceptions.UsuarioException;
@@ -25,11 +24,15 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UsuarioServiceTest {
 
+    @InjectMocks
+    private UsuarioService usuarioService;
+
     @Mock
     private UsuarioRepository usuarioRepository;
 
-    @InjectMocks
-    private UsuarioService usuarioService;
+    @Mock
+    private PrestamoRepository prestamoRepository;
+
 
     private Usuario usuarioEjemplo;
 

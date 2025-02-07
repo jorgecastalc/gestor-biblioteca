@@ -13,9 +13,6 @@ public interface UsuarioMapper {
     Usuario usuarioJpaEntityToUsuarioDomain(UsuarioJpaEntity usuarioJpaEntity);
     UsuarioJpaEntity usuarioDomainToUsuarioJpaEntity(Usuario usuario);
 
-    List<UsuarioJpaEntity> usuarioListToUsuarioEntityList(List<Usuario> usuarios);
-    List<Usuario> usuarioEntityListToUsuarioList(List<UsuarioJpaEntity> usuarios);
-
     Usuario usuarioResponseToUsuarioDomain(UsuarioResponse usuarioResponse);
     UsuarioResponse usuarioDomainToUsuarioResponse(Usuario usuario);
 
@@ -25,6 +22,4 @@ public interface UsuarioMapper {
     Usuario usuarioRequestToUsuarioDomain(UsuarioRequest usuarioRequest);
     UsuarioRequest usuarioDomainToUsuarioRequest(Usuario usuario);
 
-    List<Usuario> usuarioRequestListToUsuarioList(List<UsuarioRequest> usuarios);
-    List<UsuarioRequest> usuarioListToUsuarioRequestList(List<Usuario> usuarios);
 }

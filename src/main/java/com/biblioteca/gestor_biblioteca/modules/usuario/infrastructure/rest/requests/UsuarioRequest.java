@@ -6,8 +6,6 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioRequest {

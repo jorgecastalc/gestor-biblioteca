@@ -78,7 +78,7 @@ public class LibroController {
     public ResponseEntity<Object> actualizarLibro(@PathVariable Long id,
                                                   @RequestBody LibroRequest libroRequest) {
 
-        log.debug("[Controller] actualizando libro con id {} ", id);
+        log.debug("[Controller] actualizando libro con ID {} ", id);
 
         Libro libro = libroMapper.libroRequestToLibroDomain(libroRequest);
 

@@ -3,6 +3,7 @@ package com.biblioteca.gestor_biblioteca.modules.libro.application.services;
 import com.biblioteca.gestor_biblioteca.modules.libro.domain.model.Libro;
 import com.biblioteca.gestor_biblioteca.modules.libro.domain.repository.LibroRepository;
 import com.biblioteca.gestor_biblioteca.modules.libro.infrastructure.rest.exceptions.LibroException;
+import com.biblioteca.gestor_biblioteca.modules.prestamo.domain.repository.PrestamoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,11 +20,14 @@ import static org.mockito.Mockito.*;
 
 class LibroServiceTest {
 
+    @InjectMocks
+    private LibroService libroService;
+
     @Mock
     private LibroRepository libroRepository;
 
-    @InjectMocks
-    private LibroService libroService;
+    @Mock
+    private PrestamoRepository prestamoRepository;
 
     private Libro libroEjemplo;
 

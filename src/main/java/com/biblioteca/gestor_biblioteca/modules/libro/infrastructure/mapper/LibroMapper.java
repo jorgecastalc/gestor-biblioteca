@@ -14,9 +14,6 @@ public interface LibroMapper {
     Libro libroJpaEntityToLibroDomain(LibroJpaEntity libroJpaEntity);
     LibroJpaEntity libroDomainToLibroJpaEntity(Libro libro);
 
-    List<LibroJpaEntity> libroListToLibroEntityList(List<Libro> libros);
-    List<Libro> libroEntityListToLibroList(List<LibroJpaEntity> libros);
-
     Libro libroResponseToLibroDomain(LibroResponse libroResponse);
     LibroResponse libroDomainToLibroResponse(Libro libro);
 
@@ -26,6 +23,4 @@ public interface LibroMapper {
     Libro libroRequestToLibroDomain(LibroRequest libroRequest);
     LibroRequest libroDomainToLibroRequest(Libro libro);
 
-    List<Libro> libroRequestListToLibroList(List<LibroRequest> libros);
-    List<LibroRequest> libroListToLibroRequestList(List<Libro> libros);
 }
