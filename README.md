@@ -36,9 +36,9 @@ He manejado las excepciones usando excepciones personalizadas en cada módulo.
 
 Cada excepción incluye:
 
-Código de error HTTP (400, 404, etc.).
-Mensaje descriptivo del problema.
-Logs para depuración.
+ - Código de error HTTP (400, 404, etc.).
+ - Mensaje descriptivo del problema.
+ - Logs para depuración.
 
 ### 🔧 Principales Validaciones
 
