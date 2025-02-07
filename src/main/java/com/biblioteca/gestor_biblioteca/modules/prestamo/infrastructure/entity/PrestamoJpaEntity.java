@@ -23,7 +23,7 @@ public class PrestamoJpaEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "libro_id", unique = true)
+    @JoinColumn(name = "libro_id")
     private LibroJpaEntity libro;
 
     @ManyToOne

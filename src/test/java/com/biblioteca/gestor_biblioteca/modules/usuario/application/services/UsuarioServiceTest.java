@@ -6,10 +6,9 @@ import com.biblioteca.gestor_biblioteca.modules.usuario.domain.repository.Usuari
 import com.biblioteca.gestor_biblioteca.modules.usuario.infrastructure.rest.exceptions.UsuarioException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,7 +20,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 class UsuarioServiceTest {
 
     @InjectMocks
@@ -38,6 +36,7 @@ class UsuarioServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
         usuarioEjemplo = new Usuario(1L, "Jorge", "jorge@gmail.com", "123456789", LocalDate.of(2025, 2, 6));
     }
 
