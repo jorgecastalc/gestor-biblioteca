@@ -1,3 +1,54 @@
+## 📖 Gestor de Biblioteca - Arquitectura y Funcionamiento
+### 🏛 Arquitectura Hexagonal
+
+El flujo general de la aplicación sigue la siguiente estructura:
+
+#### *Infraestructura*
+
+- Controladores REST: Reciben las peticiones HTTP y las pasan a los servicios.
+- Repositorios JPA: Encapsulan el acceso a la base de datos y se utilizan por los repositorios de dominio.
+- Entidades JPA: Representan los datos de la base de datos.
+- Mappers: Transforman entre entidades JPA, modelos de dominio y DTOs de entrada/salida.
+
+#### *Aplicación* 
+
+- Contiene la lógica de negocio principal.
+- Implementa validaciones y reglas de negocio antes de acceder a la base de datos.
+- Se comunica con los repositorios del dominio.
+
+#### *Dominio*
+
+- Contiene los modelos de dominio (libro, usuario y prestamo).
+- Define las interfaces de repositorios que deben implementarse en la capa de infraestructura.
+
+El flujo de una operación típica (por ejemplo obtener un préstamo) es:
+
+```sh
+Controller -> Service -> Repository (Domain) -> RepositoryImpl (Infraestructura) -> JPA Repository -> Base de Datos
+```
+
+### ⚙ Gestión de Excepciones
+He manejado las excepciones usando excepciones personalizadas en cada módulo. 
+
+ - LibroException 
+ - UsuarioException
+ - PrestamoException
+
+Cada excepción incluye:
+
+Código de error HTTP (400, 404, etc.).
+Mensaje descriptivo del problema.
+Logs para depuración.
+
+### 🔧 Principales Validaciones
+
+ - Libro: No puede guardarse sin título, autor o ISBN. No puede eliminarse si tiene préstamos activos.
+ - Usuario: No puede guardarse sin nombre, email o teléfono. No puede eliminarse si tiene préstamos activos.
+ - Préstamo:
+    + El libro y el usuario deben existir antes de crearse.
+    + Un libro no puede estar en más de un préstamo activo.
+    + La fecha de devolución no puede ser anterior a la fecha de préstamo.
+
 ## 🔧 Configuración y Ejecución
 
 ### 1️⃣ Clonar el repositorio
@@ -78,7 +129,7 @@ mvn test
 
 ### 👤 **Usuarios**
 
-**POST /usuarios**
+**PUT /usuarios/1**
 ```json
 {
   "nombre": "Carlos Sánchez",
@@ -90,11 +141,9 @@ mvn test
 
 ### ♻ **Préstamos**
 
-**POST /prestamos**
+**PATCH /prestamos/2**
 ```json
 {
-  "libroId": 3,
-  "usuarioId": 1,
   "fechaPrestamo": "2025-02-10",
   "fechaDevolucion": "2025-03-10"
 }
