@@ -19,6 +19,14 @@ mvn clean install
 mvn spring-boot:run
 ```
 
+## 🛠 Testing
+
+Para ejecutar las pruebas unitarias:
+
+```sh
+mvn test
+```
+
 ## 📌 Endpoints principales
 
 ### 📖 **Libros**
@@ -54,10 +62,40 @@ mvn spring-boot:run
 | PATCH  | `/prestamos/{id}` | Actualizar parcialmente un préstamo |
 | DELETE | `/prestamos/{id}` | Eliminar un préstamo                |
 
-## 🛠 Testing
+## 🔬 Ejemplos de Request Body para pruebas en Postman
 
-Para ejecutar las pruebas unitarias:
+### 📚 **Libros**
 
-```sh
-mvn test
+**POST /libros**
+```json
+{
+  "titulo": "El Hobbit",
+  "autor": "J.R.R. Tolkien",
+  "isbn": "978-0345339683",
+  "fechaPublicacion": "1937-09-21"
+}
+```
+
+### 👤 **Usuarios**
+
+**POST /usuarios**
+```json
+{
+  "nombre": "Carlos Sánchez",
+  "email": "carlos.sanchez@example.com",
+  "telefono": "123456789",
+  "fechaRegistro": "2022-01-15"
+}
+```
+
+### ♻ **Préstamos**
+
+**POST /prestamos**
+```json
+{
+  "libroId": 3,
+  "usuarioId": 1,
+  "fechaPrestamo": "2025-02-10",
+  "fechaDevolucion": "2025-03-10"
+}
 ```
