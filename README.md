@@ -54,7 +54,7 @@ Cada excepción incluye:
 ### 1️⃣ Clonar el repositorio
 
 ```sh
-git clone https://github.com/tu-usuario/gestor-biblioteca.git
+git clone https://github.com/jorgecastalc/gestor-biblioteca.git
 cd gestor-biblioteca
 ```
 
